@@ -1,6 +1,7 @@
 import pandas as pd
 
-def load_data(file_path: str) -> pd.DataFrame:
+def load_data() -> pd.DataFrame:
+    file_path = "../data/data_table.xlsx"
     sheet_names = ["2025", "2024", "2023"]
     all_sheets = []
     for sheet in sheet_names:
@@ -22,25 +23,42 @@ def load_data(file_path: str) -> pd.DataFrame:
 
 def temp_data() -> pd.DataFrame:
     year_of_temp = ["2025", "2024", "2023"]
-    citys = ["zagreb", "split", "rijeka", "osijek", "zadar"]
+    cities = ["zagreb", "split", "rijeka", "osijek", "zadar"]
 
-    all_temps = []
+    all_city_dfs = []
 
-    for year in year_of_temp:
-        for city in citys:
+    for city in cities:
+        yearly_dfs = []
+        for year in year_of_temp:
             path_to_temp = "../temps/temps" + year + "/" + city + "Temps" + year + ".csv"
             df = pd.read_csv(path_to_temp)
+            temp_col = city + "_temps"
             df = df[["date", "tavg"]].copy()
-            df.columns = ["date", "temp_avg"]
+            df.columns = ["date", temp_col]
             df["date"] = pd.to_datetime(df["date"], errors="coerce")
-            df["temp_avg"] = pd.to_numeric(df["temp_avg"], errors="coerce")
-            df["city"] = city
-            all_temps.append(df)
+            df[temp_col] = pd.to_numeric(df[temp_col], errors="coerce")
+            yearly_dfs.append(df)
 
+        city_df = pd.concat(yearly_dfs)
 
-    data = pd.concat(all_temps, ignore_index=True)
-    data = data.dropna(subset=["date"])
+        all_city_dfs.append(city_df)
+
+    #merge city temperature dataframes by date
+    data = all_city_dfs[0]
+    for df in all_city_dfs[1:]:
+        data = data.merge(df, on="date", how="outer")
+
     data = data.sort_values("date")
     data = data.reset_index(drop=True)
+
+    return data
+
+def merge_load_and_temps() -> pd.DataFrame:
+    # making data frame for load
+    ld = load_data()
+    # making data frame for temps
+    td = temp_data()
+
+    data = None
 
     return data

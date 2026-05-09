@@ -1,11 +1,10 @@
-from data_loader import *
+from data_manager import *
 
 def main():
-    load_file_path = "../data/data_table.xlsx"
     #making data frame for load
-    ld = load_data(load_file_path)
+    ld = load_data()
 
-    print(ld.head())
+    #print(ld.head())
 
     #ld.to_csv("../data/cleaned_load_data.csv", index=False)
 
@@ -13,6 +12,10 @@ def main():
     td = temp_data()
 
     print(td.head())
+
+    #weights of city temperatures
+    zg_w, sp_w, ri_w, os_w, zd_w = 0.2, 0.2, 0.2, 0.2, 0.2
+
 
 if __name__ == "__main__":
     main()
