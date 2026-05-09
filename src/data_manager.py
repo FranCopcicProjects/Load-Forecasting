@@ -11,7 +11,7 @@ def load_data() -> pd.DataFrame:
         df["time"] = pd.to_datetime(df["time"], format="%d/%m/%Y %H:%M", errors="coerce")
         df["planned_load"] = pd.to_numeric(df["planned_load"], errors="coerce")
         df["real_load"] = pd.to_numeric(df["real_load"], errors="coerce")
-        df["year"] = int(sheet)
+        #df["year"] = int(sheet)
         all_sheets.append(df)
 
     data = pd.concat(all_sheets, ignore_index=True)
@@ -21,7 +21,7 @@ def load_data() -> pd.DataFrame:
 
     return data
 
-def temp_data() -> pd.DataFrame:
+def city_temp_data() -> pd.DataFrame:
     year_of_temp = ["2025", "2024", "2023"]
     cities = ["zagreb", "split", "rijeka", "osijek", "zadar"]
 
@@ -43,7 +43,7 @@ def temp_data() -> pd.DataFrame:
 
         all_city_dfs.append(city_df)
 
-    #merge city temperature dataframes by date
+    # merge city temperature dataframes by date
     data = all_city_dfs[0]
     for df in all_city_dfs[1:]:
         data = data.merge(df, on="date", how="outer")
@@ -55,10 +55,18 @@ def temp_data() -> pd.DataFrame:
 
 def merge_load_and_temps() -> pd.DataFrame:
     # making data frame for load
-    ld = load_data()
+    load_df = load_data()
+
     # making data frame for temps
-    td = temp_data()
+    city_temp_df = city_temp_data()
 
-    data = None
+    load_df["date"] = pd.to_datetime(load_df["time"]).dt.normalize()
 
-    return data
+    merged_df = load_df.merge(city_temp_df, on="date", how="left")
+
+    merged_df = merged_df.drop(columns=["date", "planned_load"])
+
+    return merged_df
+
+def add_is_workday() -> pd.DataFrame:
+    pass
