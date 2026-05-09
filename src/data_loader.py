@@ -19,3 +19,28 @@ def load_data(file_path: str) -> pd.DataFrame:
     data = data.reset_index(drop=True)
 
     return data
+
+def temp_data() -> pd.DataFrame:
+    year_of_temp = ["2025", "2024", "2023"]
+    citys = ["zagreb", "split", "rijeka", "osijek", "zadar"]
+
+    all_temps = []
+
+    for year in year_of_temp:
+        for city in citys:
+            path_to_temp = "../temps/temps" + year + "/" + city + "Temps" + year + ".csv"
+            df = pd.read_csv(path_to_temp)
+            df = df[["date", "tavg"]].copy()
+            df.columns = ["date", "temp_avg"]
+            df["date"] = pd.to_datetime(df["date"], errors="coerce")
+            df["temp_avg"] = pd.to_numeric(df["temp_avg"], errors="coerce")
+            df["city"] = city
+            all_temps.append(df)
+
+
+    data = pd.concat(all_temps, ignore_index=True)
+    data = data.dropna(subset=["date"])
+    data = data.sort_values("date")
+    data = data.reset_index(drop=True)
+
+    return data
