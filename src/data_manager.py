@@ -1,4 +1,5 @@
 import pandas as pd
+import holidays as hd
 
 def load_data() -> pd.DataFrame:
     file_path = "../data/data_table.xlsx"
@@ -11,7 +12,6 @@ def load_data() -> pd.DataFrame:
         df["time"] = pd.to_datetime(df["time"], format="%d/%m/%Y %H:%M", errors="coerce")
         df["planned_load"] = pd.to_numeric(df["planned_load"], errors="coerce")
         df["real_load"] = pd.to_numeric(df["real_load"], errors="coerce")
-        #df["year"] = int(sheet)
         all_sheets.append(df)
 
     data = pd.concat(all_sheets, ignore_index=True)
@@ -64,9 +64,10 @@ def merge_load_and_temps() -> pd.DataFrame:
 
     merged_df = load_df.merge(city_temp_df, on="date", how="left")
 
+    cro_holidays = hd.HR(years=[2023, 2024, 2025])
+    # adding workday indicator column
+    merged_df["is_workday"] = ( (merged_df["date"].dt.weekday < 5) & (~merged_df["date"].dt.date.isin(cro_holidays)) )
+
     merged_df = merged_df.drop(columns=["date", "planned_load"])
 
     return merged_df
-
-def add_is_workday() -> pd.DataFrame:
-    pass
