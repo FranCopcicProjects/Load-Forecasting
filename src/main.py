@@ -18,6 +18,7 @@ def main():
 
     md = merge_load_and_temps()
     print(md.head(195))
+    md.to_csv("../data/cleaned_load_data.csv", index=False)
 
 if __name__ == "__main__":
     main()

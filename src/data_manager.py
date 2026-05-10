@@ -62,6 +62,11 @@ def merge_load_and_temps() -> pd.DataFrame:
 
     load_df["date"] = pd.to_datetime(load_df["time"]).dt.normalize()
 
+    load_df["hour"] = load_df["time"].dt.hour
+    load_df["weekday"] = load_df["time"].dt.weekday
+    load_df["month"] = load_df["time"].dt.month
+    load_df["year"] = load_df["time"].dt.year
+
     merged_df = load_df.merge(city_temp_df, on="date", how="left")
 
     cro_holidays = hd.HR(years=[2023, 2024, 2025])
