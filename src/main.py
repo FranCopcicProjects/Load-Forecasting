@@ -23,7 +23,11 @@ def main():
 
     missing = find_missing_data()
     print(missing.head())
-    missing.to_excel("../data/missing_load_data.xlsx", index=False)
+    #missing.to_excel("../data/missing_load_data.xlsx", index=False)
+
+    missing_interval = find_missing_intervals()
+    print(missing_interval.head())
+    missing_interval.to_excel("../data/missing_load_data_intervals.xlsx", index=False)
 
 if __name__ == "__main__":
     main()

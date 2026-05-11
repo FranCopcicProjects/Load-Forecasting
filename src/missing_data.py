@@ -21,3 +21,42 @@ def find_missing_data()->pd.DataFrame:
     missing_df = missing_df[ ["datetime", "date", "hour", "planned_load", "real_load"] ]
 
     return missing_df
+
+import pandas as pd
+
+
+def find_missing_intervals() -> pd.DataFrame:
+    df = find_missing_data().copy()
+
+    df["datetime"] = pd.to_datetime(df["datetime"])
+    df = df.sort_values("datetime").reset_index(drop=True)
+
+    intervals = []
+
+    start_time = df.loc[0, "datetime"]
+    previous_time = df.loc[0, "datetime"]
+
+    for i in range(1, len(df)):
+        current_time = df.loc[i, "datetime"]
+
+        if current_time - previous_time != pd.Timedelta(hours=1):
+
+            end_time = previous_time
+
+            interval_length = int( (end_time - start_time) / pd.Timedelta(hours=1) ) + 1
+
+            intervals.append({"beginning_of_missing_data": start_time, "end_of_missing_data": end_time, "interval_length": interval_length})
+
+            start_time = current_time
+
+        previous_time = current_time
+
+    end_time = previous_time
+
+    interval_length = int( (end_time - start_time) / pd.Timedelta(hours=1) ) + 1
+
+    intervals.append({ "beginning_of_missing_data": start_time, "end_of_missing_data": end_time, "interval_length": interval_length})
+
+    result_df = pd.DataFrame(intervals)
+
+    return result_df
