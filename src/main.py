@@ -36,11 +36,16 @@ def main():
     #print(train_df.head())
     #print(test_df.head())
     x_train, y_train = split_features_and_target_value(train_df)
-    print(x_train.head())
-    print(y_train.head())
+    #print(x_train.head())
+    #print(y_train.head())
     x_test, y_test = split_features_and_target_value(test_df)
-    print(x_test.head())
-    print(y_test.head())
+    #print(x_test.head())
+    #print(y_test.head())
+
+    print(x_train.shape)
+    print(y_train.shape)
+    print(x_test.shape)
+    print(y_test.shape)
 
 
 
