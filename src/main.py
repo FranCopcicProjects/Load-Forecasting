@@ -35,12 +35,14 @@ def main():
     test_df = test_df.reset_index(drop=True)
     #print(train_df.head())
     #print(test_df.head())
-    x_train, target = split_features_and_target_value(train_df)
+    x_train, y_train = split_features_and_target_value(train_df)
     print(x_train.head())
-    print(target.head())
-    x_test, correct_target_value = split_features_and_target_value(test_df)
+    print(y_train.head())
+    x_test, y_test = split_features_and_target_value(test_df)
     print(x_test.head())
-    print(correct_target_value.head())
+    print(y_test.head())
+
+
 
 if __name__ == "__main__":
     main()
