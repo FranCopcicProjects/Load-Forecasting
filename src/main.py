@@ -1,5 +1,6 @@
 from data_manager import *
 from missing_data import *
+from models import *
 
 def main():
     # making data frame for load
@@ -18,7 +19,7 @@ def main():
     zg_w, sp_w, ri_w, os_w, zd_w = 0.2, 0.2, 0.2, 0.2, 0.2
 
     md = merge_load_and_temps()
-   #print(md.head(195))
+    print(md.head())
     md.to_csv("../data/cleaned_load_data.csv", index=False)
 
     #missing = find_missing_data()
@@ -29,9 +30,9 @@ def main():
     #print(missing_interval.head())
     #missing_interval.to_excel("../data/missing_load_data_intervals.xlsx", index=False)
 
-    train_df, test_df = split_train_df_and_test_df()
-    print(train_df.head())
-    print(test_df.head())
+    #train_df, test_df = split_train_df_and_test_df()
+    #print(train_df.head())
+    #print(test_df.head())
 
 if __name__ == "__main__":
     main()

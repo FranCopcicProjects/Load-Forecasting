@@ -63,18 +63,19 @@ def merge_load_and_temps() -> pd.DataFrame:
     city_temp_df = city_temp_data()
 
     load_df["date"] = pd.to_datetime(load_df["time"]).dt.normalize()
-
     load_df["hour"] = load_df["time"].dt.hour
     load_df["weekday"] = load_df["time"].dt.weekday
     load_df["month"] = load_df["time"].dt.month
+    load_df["day_of_year"] = load_df["time"].dt.dayofyear
     load_df["year"] = load_df["time"].dt.year
 
     merged_df = load_df.merge(city_temp_df, on="date", how="left")
 
     cro_holidays = hd.HR(years=[2023, 2024, 2025])
-    # adding workday indicator column
+    #adding workday indicator column
     merged_df["is_workday"] = ( (merged_df["date"].dt.weekday < 5) & (~merged_df["date"].dt.date.isin(cro_holidays)) )
-
+    #adding weekend indicator column
+    merged_df["is_weekend"] = (merged_df["date"].dt.weekday >= 5)
     merged_df = merged_df.drop(columns=["date", "planned_load"])
 
     return merged_df
