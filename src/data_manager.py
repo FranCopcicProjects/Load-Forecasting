@@ -1,3 +1,5 @@
+from typing import Any
+
 import pandas as pd
 import holidays as hd
 
@@ -76,3 +78,14 @@ def merge_load_and_temps() -> pd.DataFrame:
     merged_df = merged_df.drop(columns=["date", "planned_load"])
 
     return merged_df
+
+
+def split_train_df_and_test_df() -> tuple[pd.DataFrame, pd.DataFrame]:
+    #getting dataframe with 2023, 2024 and 2025 data
+    merged_df = merge_load_and_temps()
+
+    #splitting into test and train dataframes
+    train_df = merged_df[merged_df["year"].isin([2023, 2024])]
+    test_df = merged_df[merged_df["year"] == 2025]
+
+    return train_df, test_df

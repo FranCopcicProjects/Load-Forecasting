@@ -21,13 +21,17 @@ def main():
    #print(md.head(195))
     md.to_csv("../data/cleaned_load_data.csv", index=False)
 
-    missing = find_missing_data()
-    print(missing.head())
+    #missing = find_missing_data()
+    #print(missing.head())
     #missing.to_excel("../data/missing_load_data.xlsx", index=False)
 
-    missing_interval = find_missing_intervals()
-    print(missing_interval.head())
-    missing_interval.to_excel("../data/missing_load_data_intervals.xlsx", index=False)
+    #missing_interval = find_missing_intervals()
+    #print(missing_interval.head())
+    #missing_interval.to_excel("../data/missing_load_data_intervals.xlsx", index=False)
+
+    train_df, test_df = split_train_df_and_test_df()
+    print(train_df.head())
+    print(test_df.head())
 
 if __name__ == "__main__":
     main()
