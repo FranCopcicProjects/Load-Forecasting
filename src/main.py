@@ -18,9 +18,9 @@ def main():
     # weights of city temperatures
     zg_w, sp_w, ri_w, os_w, zd_w = 0.2, 0.2, 0.2, 0.2, 0.2
 
-    md = merge_load_and_temps()
-    print(md.head())
-    md.to_csv("../data/cleaned_load_data.csv", index=False)
+    #md = merge_load_and_temps()
+    #print(md.head())
+    #md.to_csv("../data/cleaned_load_data.csv", index=False)
 
     #missing = find_missing_data()
     #print(missing.head())
@@ -30,9 +30,17 @@ def main():
     #print(missing_interval.head())
     #missing_interval.to_excel("../data/missing_load_data_intervals.xlsx", index=False)
 
-    #train_df, test_df = split_train_df_and_test_df()
+    train_df, test_df = split_train_df_and_test_df()
+    train_df = train_df.reset_index(drop=True)
+    test_df = test_df.reset_index(drop=True)
     #print(train_df.head())
     #print(test_df.head())
+    x_train, target = split_features_and_target_value(train_df)
+    print(x_train.head())
+    print(target.head())
+    x_test, correct_target_value = split_features_and_target_value(test_df)
+    print(x_test.head())
+    print(correct_target_value.head())
 
 if __name__ == "__main__":
     main()

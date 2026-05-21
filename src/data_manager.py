@@ -90,3 +90,8 @@ def split_train_df_and_test_df() -> tuple[pd.DataFrame, pd.DataFrame]:
     test_df = merged_df[merged_df["year"] == 2025]
 
     return train_df, test_df
+
+def split_features_and_target_value(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
+    features = df.copy().drop(columns=["time", "real_load"])
+    target_value = df.copy()["real_load"]
+    return features, target_value
