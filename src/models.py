@@ -15,11 +15,11 @@ def evaluation(y_test, y_pred):
 
 def linear_regression(x_train, y_train, x_test, y_test):
     #finding NaN values, getting ValueError for x_train
-    print("x_train:\n", x_train.isna().sum())
+    #print("x_train:\n", x_train.isna().sum())
     #finding other possible rows that are NaN
-    print("y_train:\n", y_train.isna().sum())
-    print("x_test:\n", x_test.isna().sum())
-    print("y_test:\n", y_test.isna().sum())
+    #print("y_train:\n", y_train.isna().sum())
+    #print("x_test:\n", x_test.isna().sum())
+    #print("y_test:\n", y_test.isna().sum())
     reg = skl.linear_model.LinearRegression()
     reg.fit(x_train, y_train)
     #predicting load based on test features
@@ -29,9 +29,10 @@ def linear_regression(x_train, y_train, x_test, y_test):
     print("MSE =", mse)
     print("RMSE =", rmse)
     print("MAE =", mae)
-    print("MAPE =", mape * 100, "%")
+    print(f"MAPE = {mape * 100}%")
 
     #get graphs
+    
 
     return y_pred
 
