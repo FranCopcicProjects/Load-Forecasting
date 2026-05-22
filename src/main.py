@@ -47,6 +47,10 @@ def main():
     print(x_test.shape)
     print(y_test.shape)
 
+    y_pred_lr = linear_regression(x_train, y_train, x_test, y_test)
+
+
+
 
 
 if __name__ == "__main__":
