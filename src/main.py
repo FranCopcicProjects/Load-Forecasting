@@ -77,7 +77,13 @@ def main():
         print()
         start_date_input = input("Enter start date: ")
 
-    y_pred_lr = linear_regression(x_train, y_train, time_train, x_test, y_test, time_test, graph_type, start_date_input)
+    y_pred_lr = linear_regression(x_train, y_train, x_test, y_test)
+
+    # get graphs for linear regression
+    if graph_type == "weekly":
+        get_weekly_graph(time_test, y_test, y_pred_lr, start_date_input)
+    else:
+        get_daily_graph(time_test, y_test, y_pred_lr, start_date_input)
 
 
 

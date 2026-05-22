@@ -4,6 +4,60 @@ import matplotlib.dates as mdates
 import pandas as pd
 
 
+def get_daily_graph(time_test, y_test, y_pred, start_date_input):
+    #input validation
+    if start_date_input == "":
+        print("No date entered. Showing default daily visualization for 2025-01-01.")
+        daily_real_load_vs_planned_load(time_test, y_test, y_pred)
+
+    else:
+        try:
+            start_date = pd.to_datetime(start_date_input, format="%Y-%m-%d")
+
+            if start_date < pd.to_datetime("2025-01-01") or start_date > pd.to_datetime("2025-12-31"):
+                print("Date is outside the allowed range.")
+                print("Showing default daily visualization for 2025-01-01.")
+                daily_real_load_vs_planned_load(time_test, y_test, y_pred)
+
+            else:
+                print(f"Valid date entered.")
+                print(f"Showing data for {start_date.date()}.")
+                daily_real_load_vs_planned_load(time_test, y_test, y_pred, start_date)
+
+        except ValueError:
+            print("Invalid date format. Expected format is YYYY-MM-DD.")
+            print("Showing default daily visualization for 2025-01-01.")
+            daily_real_load_vs_planned_load(time_test, y_test, y_pred)
+    return
+
+def get_weekly_graph(time_test, y_test, y_pred, start_date_input):
+    #input validation
+    if start_date_input == "":
+        print("No date entered. Showing default period from 2025-01-01 to 2025-01-07.")
+        weekly_real_load_vs_planned_load(time_test, y_test, y_pred)
+
+    else:
+        try:
+            start_date = pd.to_datetime(start_date_input, format="%Y-%m-%d")
+
+            if start_date < pd.to_datetime("2025-01-01") or start_date > pd.to_datetime("2025-12-27"):
+                print("Date is outside the allowed range of the 7-day forecast.")
+                print("Showing default period from 2025-01-01 to 2025-01-07.")
+                weekly_real_load_vs_planned_load(time_test, y_test, y_pred)
+
+            else:
+                end_date = start_date + pd.Timedelta(days=6)
+                print(f"Valid date entered.")
+                print(f"Showing data from {start_date.date()} to {end_date.date()}.")
+                weekly_real_load_vs_planned_load(time_test, y_test, y_pred, start_date)
+
+        except ValueError:
+            print("Invalid date format. Expected format is YYYY-MM-DD.")
+            print("Showing default period from 2025-01-01 to 2025-01-07.")
+            weekly_real_load_vs_planned_load(time_test, y_test, y_pred)
+
+    return
+
 def weekly_real_load_vs_planned_load(time, y_true, y_pred, start_date="2025-01-01"):
     df = pd.DataFrame({
         "time": pd.to_datetime(time),
