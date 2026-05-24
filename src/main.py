@@ -55,6 +55,7 @@ def main():
     print()
 
     graph_type = input("Enter graph type: ")
+    print()
 
     y_pred_lr = None
 
@@ -68,6 +69,7 @@ def main():
         print("Default visualization period: 2025-01-01 to 2025-01-07.")
         print()
         start_date_input = input("Enter start date: ")
+        print()
 
     else:
         print("Enter a start date for the daily load forecast visualization.")
@@ -76,6 +78,7 @@ def main():
         print("The allowed date range is from 2025-01-01 to 2025-12-31.")
         print()
         start_date_input = input("Enter start date: ")
+        print()
 
     y_pred_lr = linear_regression(x_train, y_train, x_test, y_test)
 
@@ -92,10 +95,10 @@ def main():
     #    get_daily_graph(time_test, y_test, y_pred_rf, start_date_input)
 
     y_pred_xgb = xgboost(x_train, y_train, x_test, y_test)
-    # if graph_type == "weekly":
-    #    get_weekly_graph(time_test, y_test, yy_pred_xgb, start_date_input)
-    # else:
-    #    get_daily_graph(time_test, y_test, y_pred_xgb, start_date_input)
+    if graph_type == "weekly":
+        get_weekly_graph(time_test, y_test, y_pred_xgb, start_date_input)
+    else:
+        get_daily_graph(time_test, y_test, y_pred_xgb, start_date_input)
 
 
 if __name__ == "__main__":

@@ -3,6 +3,7 @@ import sklearn
 import sklearn as skl
 import pandas as pd
 from graphs import *
+import xgboost as xgb
 
 def evaluation(y_test, y_pred):
 
@@ -36,11 +37,25 @@ def linear_regression(x_train, y_train, x_test, y_test):
     return y_pred
 
 def random_forest(x_train, y_train, x_test, y_test):
-    forest = skl.ensemble.RandomForestRegressor()
-    forest.fit(x_train, y_train)
-    y_pred = forest.predict(x_test)
+    reg = skl.ensemble.RandomForestRegressor()
+    reg.fit(x_train, y_train)
+    y_pred = reg.predict(x_test)
     mse, rmse, mae, mape = evaluation(y_test, y_pred)
     print("RANDOM FOREST:")
+    print("MSE =", mse)
+    print("RMSE =", rmse)
+    print("MAE =", mae)
+    print(f"MAPE = {mape * 100}%")
+    print()
+
+    return y_pred
+
+def xgboost(x_train, y_train, x_test, y_test):
+    reg = xgb.XGBRegressor()
+    reg.fit(x_train, y_train)
+    y_pred = reg.predict(x_test)
+    mse, rmse, mae, mape = evaluation(y_test, y_pred)
+    print("XGBOOST:")
     print("MSE =", mse)
     print("RMSE =", rmse)
     print("MAE =", mae)
