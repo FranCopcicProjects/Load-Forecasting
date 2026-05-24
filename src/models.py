@@ -4,6 +4,7 @@ import sklearn as skl
 import pandas as pd
 from graphs import *
 import xgboost as xgb
+from flaml import AutoML
 
 def evaluation(y_test, y_pred):
 
@@ -63,3 +64,21 @@ def xgboost(x_train, y_train, x_test, y_test):
     print()
 
     return y_pred
+
+def automl(x_train, y_train, x_test, y_test):
+    reg = AutoML()
+    reg.fit(X_train=x_train, y_train=y_train, task="regression", time_budget=60)
+    y_pred = reg.predict(x_test)
+    mse, rmse, mae, mape = evaluation(y_test, y_pred)
+    print("AUTOML:")
+    print("Best model =", reg.best_estimator)
+    print("MSE =", mse)
+    print("RMSE =", rmse)
+    print("MAE =", mae)
+    print(f"MAPE = {mape * 100}%")
+    print()
+    return y_pred
+
+def lstm(x_train, y_train, x_test, y_test):
+    
+    return

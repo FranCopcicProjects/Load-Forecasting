@@ -95,11 +95,22 @@ def main():
     #    get_daily_graph(time_test, y_test, y_pred_rf, start_date_input)
 
     y_pred_xgb = xgboost(x_train, y_train, x_test, y_test)
-    if graph_type == "weekly":
-        get_weekly_graph(time_test, y_test, y_pred_xgb, start_date_input)
-    else:
-        get_daily_graph(time_test, y_test, y_pred_xgb, start_date_input)
+    #if graph_type == "weekly":
+    #    get_weekly_graph(time_test, y_test, y_pred_xgb, start_date_input)
+    #else:
+    #    get_daily_graph(time_test, y_test, y_pred_xgb, start_date_input)
 
+    y_pred_aml = automl(x_train, y_train, x_test, y_test)
+    #if graph_type == "weekly":
+    #    get_weekly_graph(time_test, y_test, y_pred_aml, start_date_input)
+    #else:
+    #    get_daily_graph(time_test, y_test, y_pred_aml, start_date_input)
+
+    y_pred_lstm = lstm(x_train, y_train, x_test, y_test)
+    if graph_type == "weekly":
+        get_weekly_graph(time_test, y_test, y_pred_lstm, start_date_input)
+    else:
+        get_daily_graph(time_test, y_test, y_pred_lstm, start_date_input)
 
 if __name__ == "__main__":
     main()
