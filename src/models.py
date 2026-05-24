@@ -26,10 +26,25 @@ def linear_regression(x_train, y_train, x_test, y_test):
     y_pred = reg.predict(x_test)
 
     mse, rmse, mae, mape = evaluation(y_test, y_pred)
+    print("LINEAR REGRESSION:")
+    print("MSE =", mse)
+    print("RMSE =", rmse)
+    print("MAE =", mae)
+    print(f"MAPE = {mape * 100}%")
+    print()
 
-    #print("MSE =", mse)
-    #print("RMSE =", rmse)
-    #print("MAE =", mae)
-    #print(f"MAPE = {mape * 100}%")
+    return y_pred
+
+def random_forest(x_train, y_train, x_test, y_test):
+    forest = skl.ensemble.RandomForestRegressor()
+    forest.fit(x_train, y_train)
+    y_pred = forest.predict(x_test)
+    mse, rmse, mae, mape = evaluation(y_test, y_pred)
+    print("RANDOM FOREST:")
+    print("MSE =", mse)
+    print("RMSE =", rmse)
+    print("MAE =", mae)
+    print(f"MAPE = {mape * 100}%")
+    print()
 
     return y_pred
