@@ -1,6 +1,7 @@
 from data_manager import *
 from missing_data import *
 from models import *
+from graphs import *
 
 def main():
     # making data frame for load
@@ -51,22 +52,21 @@ def main():
     print("Type 'daily' for a 1-day forecast visualization.")
     print("Type 'weekly' for a 7-day forecast visualization.")
     print("If the input is invalid or left empty, the default visualization will be used.")
-    print("Default visualization period: 2025-01-01.")
+    print("Default visualization period: 2025-01-02.")
     print()
 
     graph_type = input("Enter graph type: ")
     print()
 
-    y_pred_lr = None
 
     if graph_type == "weekly":
         print("Enter a start date for the 7-day load forecast visualization.")
         print("The expected date format is: YYYY-MM-DD")
         print("Example of a valid input: 2025-03-15")
-        print("The allowed date range is from 2025-01-01 to 2025-12-27.")
+        print("The allowed date range is from 2025-01-02 to 2025-12-27.")
         print("Dates after 2025-12-27 are not allowed because a full 7-day forecast would not be available.")
         print("If the input is invalid or left empty, the default period will be used.")
-        print("Default visualization period: 2025-01-01 to 2025-01-07.")
+        print("Default visualization period: 2025-01-02 to 2025-01-08.")
         print()
         start_date_input = input("Enter start date: ")
         print()
@@ -75,12 +75,12 @@ def main():
         print("Enter a start date for the daily load forecast visualization.")
         print("The expected date format is: YYYY-MM-DD")
         print("Example of a valid input: 2025-03-15")
-        print("The allowed date range is from 2025-01-01 to 2025-12-31.")
+        print("The allowed date range is from 2025-01-02 to 2025-12-31.")
         print()
         start_date_input = input("Enter start date: ")
         print()
 
-    y_pred_lr = linear_regression(x_train, y_train, x_test, y_test)
+    #y_pred_lr = linear_regression(x_train, y_train, x_test, y_test)
 
     # get graphs for linear regression
     #if graph_type == "weekly":
@@ -88,29 +88,34 @@ def main():
     #else:
     #    get_daily_graph(time_test, y_test, y_pred_lr, start_date_input)
 
-    y_pred_rf = random_forest(x_train, y_train, x_test, y_test)
+    #y_pred_rf = random_forest(x_train, y_train, x_test, y_test)
     #if graph_type == "weekly":
     #    get_weekly_graph(time_test, y_test, y_pred_rf, start_date_input)
     #else:
     #    get_daily_graph(time_test, y_test, y_pred_rf, start_date_input)
 
-    y_pred_xgb = xgboost(x_train, y_train, x_test, y_test)
+    #y_pred_xgb = xgboost(x_train, y_train, x_test, y_test)
     #if graph_type == "weekly":
     #    get_weekly_graph(time_test, y_test, y_pred_xgb, start_date_input)
     #else:
     #    get_daily_graph(time_test, y_test, y_pred_xgb, start_date_input)
 
-    y_pred_aml = automl(x_train, y_train, x_test, y_test)
+    #y_pred_aml = automl(x_train, y_train, x_test, y_test)
     #if graph_type == "weekly":
     #    get_weekly_graph(time_test, y_test, y_pred_aml, start_date_input)
     #else:
     #    get_daily_graph(time_test, y_test, y_pred_aml, start_date_input)
 
-    y_pred_lstm = lstm(x_train, y_train, x_test, y_test)
+    WINDOW_SIZE = 24
+    train_lstm = data_to_input_and_output_for_lstm(x_train, y_train, WINDOW_SIZE)
+    test_lstm = data_to_input_and_output_for_lstm(x_test, y_test, WINDOW_SIZE)
+
+    y_pred_lstm = lstm(train_lstm, test_lstm, WINDOW_SIZE)
     if graph_type == "weekly":
-        get_weekly_graph(time_test, y_test, y_pred_lstm, start_date_input)
+        #windowsize is 24, so we use a 24 shift
+        get_weekly_graph(time_test.iloc[WINDOW_SIZE:], y_test.iloc[WINDOW_SIZE:], y_pred_lstm, start_date_input)
     else:
-        get_daily_graph(time_test, y_test, y_pred_lstm, start_date_input)
+        get_daily_graph(time_test.iloc[WINDOW_SIZE:], y_test.iloc[WINDOW_SIZE:], y_pred_lstm, start_date_input)
 
 if __name__ == "__main__":
     main()

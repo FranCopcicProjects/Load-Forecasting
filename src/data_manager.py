@@ -1,5 +1,6 @@
 from typing import Any
 
+import numpy as np
 import pandas as pd
 import holidays as hd
 
@@ -97,3 +98,18 @@ def split_features_and_target_value(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.
     time = df.copy()["time"]
 
     return features, target_value, time
+
+def data_to_input_and_output_for_lstm(X, y, WINDOW_SIZE):
+    #this function turns a dataframe to a numpy array
+    #in this case it turns two data frames X and y to two numpy arrays
+    input_data = []
+    output_data = []
+
+    for i in range(0, len(X) - WINDOW_SIZE):
+        input_sample = X.iloc[i : i + WINDOW_SIZE].values
+        output_sample = y.iloc[i + WINDOW_SIZE]
+
+        input_data.append(input_sample)
+        output_data.append(output_sample)
+
+    return np.array(input_data, dtype=np.float32), np.array(output_data, dtype=np.float32)
