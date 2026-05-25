@@ -48,37 +48,37 @@ def main():
     #print(x_test.shape)
     #print(y_test.shape)
 
-    # print("Choose the type of forecast visualization.")
-    # print("Type 'daily' for a 1-day forecast visualization.")
-    # print("Type 'weekly' for a 7-day forecast visualization.")
-    # print("If the input is invalid or left empty, the default visualization will be used.")
-    # print("Default visualization period: 2025-01-02.")
-    # print()
-    #
-    # graph_type = input("Enter graph type: ")
-    # print()
-    #
-    #
-    # if graph_type == "weekly":
-    #     print("Enter a start date for the 7-day load forecast visualization.")
-    #     print("The expected date format is: YYYY-MM-DD")
-    #     print("Example of a valid input: 2025-03-15")
-    #     print("The allowed date range is from 2025-01-02 to 2025-12-27.")
-    #     print("Dates after 2025-12-27 are not allowed because a full 7-day forecast would not be available.")
-    #     print("If the input is invalid or left empty, the default period will be used.")
-    #     print("Default visualization period: 2025-01-02 to 2025-01-08.")
-    #     print()
-    #     start_date_input = input("Enter start date: ")
-    #     print()
-    #
-    # else:
-    #     print("Enter a start date for the daily load forecast visualization.")
-    #     print("The expected date format is: YYYY-MM-DD")
-    #     print("Example of a valid input: 2025-03-15")
-    #     print("The allowed date range is from 2025-01-02 to 2025-12-31.")
-    #     print()
-    #     start_date_input = input("Enter start date: ")
-    #     print()
+    print("Choose the type of forecast visualization.")
+    print("Type 'daily' for a 1-day forecast visualization.")
+    print("Type 'weekly' for a 7-day forecast visualization.")
+    print("If the input is invalid or left empty, the default visualization will be used.")
+    print("Default visualization period: 2025-01-02.")
+    print()
+
+    graph_type = input("Enter graph type: ")
+    print()
+
+
+    if graph_type == "weekly":
+        print("Enter a start date for the 7-day load forecast visualization.")
+        print("The expected date format is: YYYY-MM-DD")
+        print("Example of a valid input: 2025-03-15")
+        print("The allowed date range is from 2025-01-02 to 2025-12-27.")
+        print("Dates after 2025-12-27 are not allowed because a full 7-day forecast would not be available.")
+        print("If the input is invalid or left empty, the default period will be used.")
+        print("Default visualization period: 2025-01-02 to 2025-01-08.")
+        print()
+        start_date_input = input("Enter start date: ")
+        print()
+
+    else:
+        print("Enter a start date for the daily load forecast visualization.")
+        print("The expected date format is: YYYY-MM-DD")
+        print("Example of a valid input: 2025-03-15")
+        print("The allowed date range is from 2025-01-02 to 2025-12-31.")
+        print()
+        start_date_input = input("Enter start date: ")
+        print()
 
     #y_pred_lr = linear_regression(x_train, y_train, x_test, y_test)
 
@@ -128,7 +128,17 @@ def main():
     x_train, y_train, time_train = split_features_and_target_value(train_df)
     x_test, y_test, time_test = split_features_and_target_value(test_df)
 
-
+    x_train_scaled, y_train_scaled, x_test_scaled, y_test_scaled, y_scaler = scaling_data(x_train, y_train, x_test, y_test)
+    #testing new data on lstm
+    WINDOW_SIZE = 24
+    train_lstm = data_to_input_and_output_for_lstm(x_train_scaled, y_train_scaled, WINDOW_SIZE)
+    test_lstm = data_to_input_and_output_for_lstm(x_test_scaled, y_test_scaled, WINDOW_SIZE)
+    y_pred_lstm = lstm(train_lstm, test_lstm, WINDOW_SIZE, y_scaler)
+    if graph_type == "weekly":
+        #windowsize is 24, so we use a 24 shift
+        get_weekly_graph(time_test.iloc[WINDOW_SIZE:], y_test.iloc[WINDOW_SIZE:], y_pred_lstm, start_date_input)
+    else:
+        get_daily_graph(time_test.iloc[WINDOW_SIZE:], y_test.iloc[WINDOW_SIZE:], y_pred_lstm, start_date_input)
 
 if __name__ == "__main__":
     main()

@@ -3,6 +3,8 @@ from typing import Any
 import numpy as np
 import pandas as pd
 import holidays as hd
+from sklearn.preprocessing import StandardScaler
+
 
 def load_data() -> pd.DataFrame:
     file_path = "../data/data_table.xlsx"
@@ -125,3 +127,14 @@ def add_time_lags(df: pd.DataFrame) -> pd.DataFrame:
         df_with_lags = df_with_lags.dropna(subset=[f"load_t-{lag}"])
 
     return df_with_lags
+
+def scaling_data(x_train, y_train, x_test, y_test):
+    x_scaler = StandardScaler()
+    y_scaler = StandardScaler()
+
+    x_train_scaled = pd.DataFrame(x_scaler.fit_transform(x_train), columns=x_train.columns, index=x_train.index)
+    x_test_scaled = pd.DataFrame(x_scaler.transform(x_test), columns=x_test.columns, index=x_test.index)
+    y_train_scaled = pd.DataFrame(y_scaler.fit_transform(y_train.values.reshape(-1, 1)).flatten(), index=y_train.index)
+    y_test_scaled = pd.DataFrame(y_scaler.transform(y_test.values.reshape(-1, 1)).flatten(), index=y_test.index)
+
+    return x_train_scaled, y_train_scaled, x_test_scaled, y_test_scaled, y_scaler

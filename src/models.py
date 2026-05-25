@@ -95,14 +95,15 @@ def train_neural_network(X, y, WINDOW_SIZE, epochs=10, learning_rate=0.005):
     model.fit(X, y, epochs=epochs, callbacks=[check_point])
     return model
 
-def lstm(train, test, WINDOW_SIZE):
+def lstm(train, test, WINDOW_SIZE, y_scaler):
     train_input, train_output = train
     test_input, test_output = test
 
     model = train_neural_network(train_input, train_output, WINDOW_SIZE)
 
     y_pred = model.predict(test_input)
-    y_pred = y_pred.flatten()
+    y_pred = y_scaler.inverse_transform(y_pred.reshape(-1, 1)).flatten()
+    test_output = y_scaler.inverse_transform(test_output.reshape(-1, 1)).flatten()
     mse, rmse, mae, mape = evaluation(test_output, y_pred)
 
     print("LSTM:")
