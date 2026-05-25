@@ -56,9 +56,9 @@ def city_temp_data() -> pd.DataFrame:
 
     return data
 
-def merge_load_and_temps() -> pd.DataFrame:
+def merge_load_and_temps(df: pd.DataFrame = load_data()) -> pd.DataFrame:
     # making data frame for load
-    load_df = load_data()
+    load_df = df
 
     # making data frame for temps
     city_temp_df = city_temp_data()
@@ -82,9 +82,9 @@ def merge_load_and_temps() -> pd.DataFrame:
     return merged_df
 
 
-def split_train_df_and_test_df() -> tuple[pd.DataFrame, pd.DataFrame]:
+def split_train_df_and_test_df(df: pd.DataFrame = merge_load_and_temps()) -> tuple[pd.DataFrame, pd.DataFrame]:
     #getting dataframe with 2023, 2024 and 2025 data
-    merged_df = merge_load_and_temps()
+    merged_df = df
 
     #splitting into test and train dataframes
     train_df = merged_df[merged_df["year"].isin([2023, 2024])]
@@ -93,7 +93,7 @@ def split_train_df_and_test_df() -> tuple[pd.DataFrame, pd.DataFrame]:
     return train_df, test_df
 
 def split_features_and_target_value(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
-    features = df.copy().drop(columns=["time", "real_load"])
+    features = df.copy().drop(columns=["time", "real_load", "year"])
     target_value = df.copy()["real_load"]
     time = df.copy()["time"]
 
@@ -113,3 +113,15 @@ def data_to_input_and_output_for_lstm(X, y, WINDOW_SIZE):
         output_data.append(output_sample)
 
     return np.array(input_data, dtype=np.float32), np.array(output_data, dtype=np.float32)
+
+def add_time_lags(df: pd.DataFrame) -> pd.DataFrame:
+    df_with_lags = df.copy()
+    lags = [1, 24]
+    for lag in lags:
+        lagged = df[["time", "real_load"]].copy()
+        lagged["time"] = lagged["time"] + pd.Timedelta(hours=lag)
+        lagged = lagged.rename(columns={"real_load": f"load_t-{lag}"})
+        df_with_lags = df_with_lags.merge(lagged, on="time", how="left")
+        df_with_lags = df_with_lags.dropna(subset=[f"load_t-{lag}"])
+
+    return df_with_lags

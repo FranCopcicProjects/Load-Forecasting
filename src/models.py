@@ -99,10 +99,6 @@ def lstm(train, test, WINDOW_SIZE):
     train_input, train_output = train
     test_input, test_output = test
 
-    print(train_input.shape, train_output.shape)
-    print(test_input.shape, test_output.shape)
-
-
     model = train_neural_network(train_input, train_output, WINDOW_SIZE)
 
     y_pred = model.predict(test_input)
