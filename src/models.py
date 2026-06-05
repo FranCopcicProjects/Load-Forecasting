@@ -1,11 +1,8 @@
-import numpy as np
 import sklearn
 import sklearn as skl
-import pandas as pd
 import xgboost as xgb
 from flaml import AutoML
 from data_manager import *
-import matplotlib.pyplot as plt
 import tensorflow.keras as keras
 
 def evaluation(y_test, y_pred):

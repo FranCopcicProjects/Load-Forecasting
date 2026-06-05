@@ -16,9 +16,6 @@ def main():
 
     #print(td.head())
 
-    # weights of city temperatures
-    zg_w, sp_w, ri_w, os_w, zd_w = 0.2, 0.2, 0.2, 0.2, 0.2
-
     #md = merge_load_and_temps(ld)
     #print(md.head())
     #md.to_csv("../data/cleaned_load_data.csv", index=False)
@@ -34,6 +31,7 @@ def main():
     train_df, test_df = split_train_df_and_test_df()
     train_df = train_df.reset_index(drop=True)
     test_df = test_df.reset_index(drop=True)
+
     #print(train_df.head())
     #print(test_df.head())
     x_train, y_train, time_train = split_features_and_target_value(train_df)
@@ -53,6 +51,7 @@ def main():
     print("Type 'weekly' for a 7-day forecast visualization.")
     print("If the input is invalid or left empty, the default visualization will be used.")
     print("Default visualization period: 2025-01-02.")
+    print("Except for LSTM, default visualization period for LSTM: 2025-01-03.")
     print()
 
     graph_type = input("Enter graph type: ")
@@ -67,6 +66,7 @@ def main():
         print("Dates after 2025-12-27 are not allowed because a full 7-day forecast would not be available.")
         print("If the input is invalid or left empty, the default period will be used.")
         print("Default visualization period: 2025-01-02 to 2025-01-08.")
+        print("Except for LSTM, default visualization period for LSTM: 2025-01-03 to 2025-01-08.")
         print()
         start_date_input = input("Enter start date: ")
         print()
@@ -76,6 +76,7 @@ def main():
         print("The expected date format is: YYYY-MM-DD")
         print("Example of a valid input: 2025-03-15")
         print("The allowed date range is from 2025-01-02 to 2025-12-31.")
+        print("(for LSTM allowed date range is from 2025-01-03 to 2025-12-31)")
         print()
         start_date_input = input("Enter start date: ")
         print()
@@ -84,27 +85,27 @@ def main():
 
     # get graphs for linear regression
     #if graph_type == "weekly":
-    #    get_weekly_graph(time_test, y_test, y_pred_lr, start_date_input)
+    #    get_weekly_graph(time_test, y_test, y_pred_lr, "Linear Regression", start_date_input)
     #else:
-    #    get_daily_graph(time_test, y_test, y_pred_lr, start_date_input)
+    #    get_daily_graph(time_test, y_test, y_pred_lr, "Linear Regression", start_date_input)
 
     #y_pred_rf = random_forest(x_train, y_train, x_test, y_test)
     #if graph_type == "weekly":
-    #    get_weekly_graph(time_test, y_test, y_pred_rf, start_date_input)
+    #    get_weekly_graph(time_test, y_test, y_pred_rf, "Random Forest", start_date_input)
     #else:
-    #    get_daily_graph(time_test, y_test, y_pred_rf, start_date_input)
+    #    get_daily_graph(time_test, y_test, y_pred_rf, "Random Forest", start_date_input)
 
     #y_pred_xgb = xgboost(x_train, y_train, x_test, y_test)
     #if graph_type == "weekly":
-    #    get_weekly_graph(time_test, y_test, y_pred_xgb, start_date_input)
+    #    get_weekly_graph(time_test, y_test, y_pred_xgb, "XGBoost", start_date_input)
     #else:
-    #    get_daily_graph(time_test, y_test, y_pred_xgb, start_date_input)
+    #    get_daily_graph(time_test, y_test, y_pred_xgb, "XGBoost", start_date_input)
 
     #y_pred_aml = automl(x_train, y_train, x_test, y_test)
     #if graph_type == "weekly":
-    #    get_weekly_graph(time_test, y_test, y_pred_aml, start_date_input)
+    #    get_weekly_graph(time_test, y_test, y_pred_aml, "Auto ML", start_date_input)
     #else:
-    #    get_daily_graph(time_test, y_test, y_pred_aml, start_date_input)
+    #    get_daily_graph(time_test, y_test, y_pred_aml, "Auto ML", start_date_input)
 
     #WINDOW_SIZE = 24
     #train_lstm = data_to_input_and_output_for_lstm(x_train, y_train, WINDOW_SIZE)
@@ -113,11 +114,24 @@ def main():
     #y_pred_lstm = lstm(train_lstm, test_lstm, WINDOW_SIZE)
     #if graph_type == "weekly":
         #windowsize is 24, so we use a 24 shift
-    #    get_weekly_graph(time_test.iloc[WINDOW_SIZE:], y_test.iloc[WINDOW_SIZE:], y_pred_lstm, start_date_input)
+    #    get_weekly_graph(time_test.iloc[WINDOW_SIZE:], y_test.iloc[WINDOW_SIZE:], y_pred_lstm, "LSTM", start_date_input, is_lstm=True)
     #else:
-    #    get_daily_graph(time_test.iloc[WINDOW_SIZE:], y_test.iloc[WINDOW_SIZE:], y_pred_lstm, start_date_input)
+    #    get_daily_graph(time_test.iloc[WINDOW_SIZE:], y_test.iloc[WINDOW_SIZE:], y_pred_lstm, "LSTM", start_date_input, is_lstm=True)
 
-    #getting time lags for
+    # x_train_scaled, y_train_scaled, x_test_scaled, y_test_scaled, y_scaler = scaling_data(x_train, y_train, x_test, y_test)
+    # WINDOW_SIZE = 24
+    # train_lstm = data_to_input_and_output_for_lstm(x_train_scaled, y_train_scaled, WINDOW_SIZE)
+    # test_lstm = data_to_input_and_output_for_lstm(x_test_scaled, y_test_scaled, WINDOW_SIZE)
+    # y_pred_lstm = lstm(train_lstm, test_lstm, WINDOW_SIZE, y_scaler)
+    # if graph_type == "weekly":
+    #     # windowsize is 24, so we use a 24 shift
+    #     get_weekly_graph(time_test.iloc[WINDOW_SIZE:], y_test.iloc[WINDOW_SIZE:], y_pred_lstm, "LSTM", start_date_input, is_lstm=True)
+    # else:
+    #     get_daily_graph(time_test.iloc[WINDOW_SIZE:], y_test.iloc[WINDOW_SIZE:], y_pred_lstm, "LSTM", start_date_input, is_lstm=True)
+
+
+
+    #getting time lags
     cleaned_load_data_v2 = add_time_lags(ld)
     cleaned_load_data_v2 = merge_load_and_temps(cleaned_load_data_v2)
     cleaned_load_data_v2.to_csv("../data/cleaned_load_data_v2.csv", index=False)
@@ -128,6 +142,33 @@ def main():
     x_train, y_train, time_train = split_features_and_target_value(train_df)
     x_test, y_test, time_test = split_features_and_target_value(test_df)
 
+    #testing new data on linear regression model
+    y_pred_lr = linear_regression(x_train, y_train, x_test, y_test)
+
+    #get graphs for linear regression
+    if graph_type == "weekly":
+       get_weekly_graph(time_test, y_test, y_pred_lr, "Linear Regression", start_date_input)
+    else:
+       get_daily_graph(time_test, y_test, y_pred_lr, "Linear Regression", start_date_input)
+
+    y_pred_rf = random_forest(x_train, y_train, x_test, y_test)
+    if graph_type == "weekly":
+       get_weekly_graph(time_test, y_test, y_pred_rf, "Random Forest", start_date_input)
+    else:
+       get_daily_graph(time_test, y_test, y_pred_rf, "Random Forest", start_date_input)
+
+    y_pred_xgb = xgboost(x_train, y_train, x_test, y_test)
+    if graph_type == "weekly":
+       get_weekly_graph(time_test, y_test, y_pred_xgb, "XGBoost", start_date_input)
+    else:
+       get_daily_graph(time_test, y_test, y_pred_xgb, "XGBoost", start_date_input)
+
+    y_pred_aml = automl(x_train, y_train, x_test, y_test)
+    if graph_type == "weekly":
+       get_weekly_graph(time_test, y_test, y_pred_aml, "Auto ML", start_date_input)
+    else:
+       get_daily_graph(time_test, y_test, y_pred_aml, "Auto ML", start_date_input)
+
     x_train_scaled, y_train_scaled, x_test_scaled, y_test_scaled, y_scaler = scaling_data(x_train, y_train, x_test, y_test)
     #testing new data on lstm
     WINDOW_SIZE = 24
@@ -136,9 +177,9 @@ def main():
     y_pred_lstm = lstm(train_lstm, test_lstm, WINDOW_SIZE, y_scaler)
     if graph_type == "weekly":
         #windowsize is 24, so we use a 24 shift
-        get_weekly_graph(time_test.iloc[WINDOW_SIZE:], y_test.iloc[WINDOW_SIZE:], y_pred_lstm, start_date_input)
+        get_weekly_graph(time_test.iloc[WINDOW_SIZE:], y_test.iloc[WINDOW_SIZE:], y_pred_lstm, "LSTM", start_date_input, is_lstm=True)
     else:
-        get_daily_graph(time_test.iloc[WINDOW_SIZE:], y_test.iloc[WINDOW_SIZE:], y_pred_lstm, start_date_input)
+        get_daily_graph(time_test.iloc[WINDOW_SIZE:], y_test.iloc[WINDOW_SIZE:], y_pred_lstm, "LSTM", start_date_input, is_lstm=True)
 
 if __name__ == "__main__":
     main()
