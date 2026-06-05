@@ -4,6 +4,10 @@ from models import *
 from graphs import *
 
 def main():
+    #clearing errors.txt file
+    with open("../data/errors.txt", "w") as f:
+        f.write("")
+
     # making data frame for load
     ld = load_data()
 

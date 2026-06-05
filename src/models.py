@@ -14,6 +14,10 @@ def evaluation(y_test, y_pred):
 
     return mse, rmse, mae, mape
 
+def add_evaluation(string):
+    with open("../data/errors.txt", "a") as f:
+        f.write(string)
+
 def linear_regression(x_train, y_train, x_test, y_test):
     #finding NaN values, getting ValueError for x_train
     #print("x_train:\n", x_train.isna().sum())
@@ -27,12 +31,13 @@ def linear_regression(x_train, y_train, x_test, y_test):
     y_pred = reg.predict(x_test)
 
     mse, rmse, mae, mape = evaluation(y_test, y_pred)
-    print("LINEAR REGRESSION:")
-    print("MSE =", mse)
-    print("RMSE =", rmse)
-    print("MAE =", mae)
-    print(f"MAPE = {mape * 100}%")
-    print()
+    string = "LINEAR REGRESSION:\n"
+    string += "MSE = " + str(mse) + "\n"
+    string += "RMSE = " + str(rmse) + "\n"
+    string += "MAE = " + str(mae) + "\n"
+    string += "MAPE = " + str(mape * 100) + " %\n\n"
+    add_evaluation(string)
+    print(string)
 
     return y_pred
 
@@ -41,12 +46,13 @@ def random_forest(x_train, y_train, x_test, y_test):
     reg.fit(x_train, y_train)
     y_pred = reg.predict(x_test)
     mse, rmse, mae, mape = evaluation(y_test, y_pred)
-    print("RANDOM FOREST:")
-    print("MSE =", mse)
-    print("RMSE =", rmse)
-    print("MAE =", mae)
-    print(f"MAPE = {mape * 100}%")
-    print()
+    string = "RANDOM FOREST:\n"
+    string += "MSE = " + str(mse) + "\n"
+    string += "RMSE = " + str(rmse) + "\n"
+    string += "MAE = " + str(mae) + "\n"
+    string += "MAPE = " + str(mape * 100) + " %\n\n"
+    add_evaluation(string)
+    print(string)
 
     return y_pred
 
@@ -55,12 +61,13 @@ def xgboost(x_train, y_train, x_test, y_test):
     reg.fit(x_train, y_train)
     y_pred = reg.predict(x_test)
     mse, rmse, mae, mape = evaluation(y_test, y_pred)
-    print("XGBOOST:")
-    print("MSE =", mse)
-    print("RMSE =", rmse)
-    print("MAE =", mae)
-    print(f"MAPE = {mape * 100}%")
-    print()
+    string = "XGBOOST:\n"
+    string += "MSE = " + str(mse) + "\n"
+    string += "RMSE = " + str(rmse) + "\n"
+    string += "MAE = " + str(mae) + "\n"
+    string += "MAPE = " + str(mape * 100) + " %\n\n"
+    add_evaluation(string)
+    print(string)
 
     return y_pred
 
@@ -69,13 +76,14 @@ def automl(x_train, y_train, x_test, y_test):
     reg.fit(X_train=x_train, y_train=y_train, task="regression", time_budget=60)
     y_pred = reg.predict(x_test)
     mse, rmse, mae, mape = evaluation(y_test, y_pred)
-    print("AUTOML:")
-    print("Best model =", reg.best_estimator)
-    print("MSE =", mse)
-    print("RMSE =", rmse)
-    print("MAE =", mae)
-    print(f"MAPE = {mape * 100}%")
-    print()
+    string = "AUTOML:\n"
+    string += "Best model = " + reg.best_estimator + "\n"
+    string += "MSE = " + str(mse) + "\n"
+    string += "RMSE = " + str(rmse) + "\n"
+    string += "MAE = " + str(mae) + "\n"
+    string += "MAPE = " + str(mape * 100) + " %\n\n"
+    add_evaluation(string)
+    print(string)
     return y_pred
 
 def train_neural_network(X, y, WINDOW_SIZE, epochs=10, learning_rate=0.005):
@@ -103,11 +111,12 @@ def lstm(train, test, WINDOW_SIZE, y_scaler):
     test_output = y_scaler.inverse_transform(test_output.reshape(-1, 1)).flatten()
     mse, rmse, mae, mape = evaluation(test_output, y_pred)
 
-    print("LSTM:")
-    print("MSE =", mse)
-    print("RMSE =", rmse)
-    print("MAE =", mae)
-    print(f"MAPE = {mape * 100}%")
-    print()
+    string = "LSTM:\n"
+    string += "MSE = " + str(mse) + "\n"
+    string += "RMSE = " + str(rmse) + "\n"
+    string += "MAE = " + str(mae) + "\n"
+    string += "MAPE = " + str(mape * 100) + " %\n\n"
+    add_evaluation(string)
+    print(string)
 
     return y_pred
