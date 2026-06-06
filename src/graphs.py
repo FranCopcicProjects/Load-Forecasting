@@ -130,8 +130,8 @@ def weekly_real_load_vs_planned_load(time, y_true, y_pred, model, start_date="20
     plt.scatter(df["time"], df["predicted_load"], label="Predicted Load", color="red", s=10)
 
     plt.title(f"{model} Weekly Load Forecast")
-    plt.xlabel("Time")
-    plt.ylabel("Load")
+    plt.xlabel("Date")
+    plt.ylabel("Load [MW]")
     plt.legend()
     plt.grid(True)
     plt.show()
@@ -157,8 +157,8 @@ def daily_real_load_vs_planned_load(time, y_true, y_pred, model, start_date="202
     plt.scatter(df["time"], df["predicted_load"],label="Predicted Load", color="red", s=10)
 
     plt.title(f"{model} Daily Load Forecast for {start_date.date()}")
-    plt.xlabel("Time")
-    plt.ylabel("Load")
+    plt.xlabel("Hour")
+    plt.ylabel("Load [MW]")
     plt.legend()
     plt.grid(True)
     plt.xticks(rotation=45)
@@ -169,3 +169,22 @@ def daily_real_load_vs_planned_load(time, y_true, y_pred, model, start_date="202
 
     return
 
+def get_boxplot_graph(df, model):
+    boxplot = df.copy()
+
+    fig, ax = plt.subplots(figsize=(12,6))
+
+    boxplot.boxplot(column="|real_load - predicted_load|", by="month", ax=ax)
+
+    ax.set_title(f"Monthly Error Distribution for {model} model")
+    ax.set_xlabel("Month")
+    ax.set_ylabel("Absolute Error [MW]")
+    ax.grid(True)
+
+    fig.suptitle("")
+
+    ax.set_xticklabels([f"{i}." for i in range(1, 13)])
+    plt.tight_layout()
+    plt.show()
+
+    return

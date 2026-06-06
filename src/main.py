@@ -155,11 +155,20 @@ def main():
     else:
        get_daily_graph(time_test, y_test, y_pred_lr, "Linear Regression", start_date_input)
 
+    #get monthly boxplot graph
+    boxplot_lr = prepare_for_boxplot(y_test, y_pred_lr, time_test)
+    get_boxplot_graph(boxplot_lr, "Linear Regression")
+
+
+
     y_pred_rf = random_forest(x_train, y_train, x_test, y_test)
     if graph_type == "weekly":
        get_weekly_graph(time_test, y_test, y_pred_rf, "Random Forest", start_date_input)
     else:
        get_daily_graph(time_test, y_test, y_pred_rf, "Random Forest", start_date_input)
+
+    boxplot_lr = prepare_for_boxplot(y_test, y_pred_lr, time_test)
+    get_boxplot_graph(boxplot_lr, "Random Forest")
 
     y_pred_xgb = xgboost(x_train, y_train, x_test, y_test)
     if graph_type == "weekly":
@@ -167,11 +176,17 @@ def main():
     else:
        get_daily_graph(time_test, y_test, y_pred_xgb, "XGBoost", start_date_input)
 
+    boxplot_lr = prepare_for_boxplot(y_test, y_pred_lr, time_test)
+    get_boxplot_graph(boxplot_lr, "XGBoost")
+
     y_pred_aml = automl(x_train, y_train, x_test, y_test)
     if graph_type == "weekly":
        get_weekly_graph(time_test, y_test, y_pred_aml, "Auto ML", start_date_input)
     else:
        get_daily_graph(time_test, y_test, y_pred_aml, "Auto ML", start_date_input)
+
+    boxplot_lr = prepare_for_boxplot(y_test, y_pred_lr, time_test)
+    get_boxplot_graph(boxplot_lr, "Auto ML")
 
     x_train_scaled, y_train_scaled, x_test_scaled, y_test_scaled, y_scaler = scaling_data(x_train, y_train, x_test, y_test)
     #testing new data on lstm
@@ -184,6 +199,11 @@ def main():
         get_weekly_graph(time_test.iloc[WINDOW_SIZE:], y_test.iloc[WINDOW_SIZE:], y_pred_lstm, "LSTM", start_date_input, is_lstm=True)
     else:
         get_daily_graph(time_test.iloc[WINDOW_SIZE:], y_test.iloc[WINDOW_SIZE:], y_pred_lstm, "LSTM", start_date_input, is_lstm=True)
+
+    boxplot_lr = prepare_for_boxplot(y_test, y_pred_lr, time_test)
+    get_boxplot_graph(boxplot_lr, "LSTM")
+
+    return
 
 if __name__ == "__main__":
     main()
