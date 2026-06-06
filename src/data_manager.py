@@ -138,7 +138,7 @@ def scaling_data(x_train, y_train, x_test, y_test):
     return x_train_scaled, y_train_scaled, x_test_scaled, y_test_scaled, y_scaler
 
 def prepare_for_boxplot(y_true, y_pred, time):
-    df = df = pd.DataFrame({"time": pd.to_datetime(time), "real_load": y_true, "predicted_load": y_pred})
+    df = pd.DataFrame({"time": pd.to_datetime(time), "real_load": y_true, "predicted_load": y_pred})
     df["month"] = df["time"].dt.month
     df["|real_load - predicted_load|"] = abs(df["real_load"] - df["predicted_load"])
     return df
