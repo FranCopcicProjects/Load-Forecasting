@@ -85,55 +85,56 @@ def main():
         start_date_input = input("Enter start date: ")
         print()
 
-    #y_pred_lr = linear_regression(x_train, y_train, x_test, y_test)
+    y_pred_lr = linear_regression(x_train, y_train, x_test, y_test)
+    #get graphs for linear regression
+    if graph_type == "weekly":
+       get_weekly_graph(time_test, y_test, y_pred_lr, "Linear Regression", start_date_input)
+    else:
+       get_daily_graph(time_test, y_test, y_pred_lr, "Linear Regression", start_date_input)
 
-    # get graphs for linear regression
-    #if graph_type == "weekly":
-    #    get_weekly_graph(time_test, y_test, y_pred_lr, "Linear Regression", start_date_input)
-    #else:
-    #    get_daily_graph(time_test, y_test, y_pred_lr, "Linear Regression", start_date_input)
+    boxplot_lr = prepare_for_boxplot(y_test, y_pred_lr, time_test)
+    get_boxplot_graph(boxplot_lr, "Linear Regression")
 
-    #y_pred_rf = random_forest(x_train, y_train, x_test, y_test)
-    #if graph_type == "weekly":
-    #    get_weekly_graph(time_test, y_test, y_pred_rf, "Random Forest", start_date_input)
-    #else:
-    #    get_daily_graph(time_test, y_test, y_pred_rf, "Random Forest", start_date_input)
+    y_pred_rf = random_forest(x_train, y_train, x_test, y_test)
+    if graph_type == "weekly":
+       get_weekly_graph(time_test, y_test, y_pred_rf, "Random Forest", start_date_input)
+    else:
+       get_daily_graph(time_test, y_test, y_pred_rf, "Random Forest", start_date_input)
 
-    #y_pred_xgb = xgboost(x_train, y_train, x_test, y_test)
-    #if graph_type == "weekly":
-    #    get_weekly_graph(time_test, y_test, y_pred_xgb, "XGBoost", start_date_input)
-    #else:
-    #    get_daily_graph(time_test, y_test, y_pred_xgb, "XGBoost", start_date_input)
+    boxplot_lr = prepare_for_boxplot(y_test, y_pred_lr, time_test)
+    get_boxplot_graph(boxplot_lr, "Random Forest")
 
-    #y_pred_aml = automl(x_train, y_train, x_test, y_test)
-    #if graph_type == "weekly":
-    #    get_weekly_graph(time_test, y_test, y_pred_aml, "Auto ML", start_date_input)
-    #else:
-    #    get_daily_graph(time_test, y_test, y_pred_aml, "Auto ML", start_date_input)
+    y_pred_xgb = xgboost(x_train, y_train, x_test, y_test)
+    if graph_type == "weekly":
+       get_weekly_graph(time_test, y_test, y_pred_xgb, "XGBoost", start_date_input)
+    else:
+       get_daily_graph(time_test, y_test, y_pred_xgb, "XGBoost", start_date_input)
 
-    #WINDOW_SIZE = 24
-    #train_lstm = data_to_input_and_output_for_lstm(x_train, y_train, WINDOW_SIZE)
-    #test_lstm = data_to_input_and_output_for_lstm(x_test, y_test, WINDOW_SIZE)
+    boxplot_lr = prepare_for_boxplot(y_test, y_pred_lr, time_test)
+    get_boxplot_graph(boxplot_lr, "XGBoost")
 
-    #y_pred_lstm = lstm(train_lstm, test_lstm, WINDOW_SIZE)
-    #if graph_type == "weekly":
-        #windowsize is 24, so we use a 24 shift
-    #    get_weekly_graph(time_test.iloc[WINDOW_SIZE:], y_test.iloc[WINDOW_SIZE:], y_pred_lstm, "LSTM", start_date_input, is_lstm=True)
-    #else:
-    #    get_daily_graph(time_test.iloc[WINDOW_SIZE:], y_test.iloc[WINDOW_SIZE:], y_pred_lstm, "LSTM", start_date_input, is_lstm=True)
+    y_pred_aml = automl(x_train, y_train, x_test, y_test)
+    if graph_type == "weekly":
+       get_weekly_graph(time_test, y_test, y_pred_aml, "Auto ML", start_date_input)
+    else:
+       get_daily_graph(time_test, y_test, y_pred_aml, "Auto ML", start_date_input)
 
-    # x_train_scaled, y_train_scaled, x_test_scaled, y_test_scaled, y_scaler = scaling_data(x_train, y_train, x_test, y_test)
-    # WINDOW_SIZE = 24
-    # train_lstm = data_to_input_and_output_for_lstm(x_train_scaled, y_train_scaled, WINDOW_SIZE)
-    # test_lstm = data_to_input_and_output_for_lstm(x_test_scaled, y_test_scaled, WINDOW_SIZE)
-    # y_pred_lstm = lstm(train_lstm, test_lstm, WINDOW_SIZE, y_scaler)
-    # if graph_type == "weekly":
-    #     # windowsize is 24, so we use a 24 shift
-    #     get_weekly_graph(time_test.iloc[WINDOW_SIZE:], y_test.iloc[WINDOW_SIZE:], y_pred_lstm, "LSTM", start_date_input, is_lstm=True)
-    # else:
-    #     get_daily_graph(time_test.iloc[WINDOW_SIZE:], y_test.iloc[WINDOW_SIZE:], y_pred_lstm, "LSTM", start_date_input, is_lstm=True)
+    boxplot_lr = prepare_for_boxplot(y_test, y_pred_lr, time_test)
+    get_boxplot_graph(boxplot_lr, "Auto ML")
 
+    x_train_scaled, y_train_scaled, x_test_scaled, y_test_scaled, y_scaler = scaling_data(x_train, y_train, x_test, y_test)
+    WINDOW_SIZE = 24
+    train_lstm = data_to_input_and_output_for_lstm(x_train_scaled, y_train_scaled, WINDOW_SIZE)
+    test_lstm = data_to_input_and_output_for_lstm(x_test_scaled, y_test_scaled, WINDOW_SIZE)
+    y_pred_lstm = lstm(train_lstm, test_lstm, WINDOW_SIZE, y_scaler)
+    if graph_type == "weekly":
+        # windowsize is 24, so we use a 24 shift
+        get_weekly_graph(time_test.iloc[WINDOW_SIZE:], y_test.iloc[WINDOW_SIZE:], y_pred_lstm, "LSTM", start_date_input, is_lstm=True)
+    else:
+        get_daily_graph(time_test.iloc[WINDOW_SIZE:], y_test.iloc[WINDOW_SIZE:], y_pred_lstm, "LSTM", start_date_input, is_lstm=True)
 
+    boxplot_lr = prepare_for_boxplot(y_test, y_pred_lr, time_test)
+    get_boxplot_graph(boxplot_lr, "LSTM")
 
     #getting time lags
     cleaned_load_data_v2 = add_time_lags(ld)
@@ -158,7 +159,6 @@ def main():
     #get monthly boxplot graph
     boxplot_lr = prepare_for_boxplot(y_test, y_pred_lr, time_test)
     get_boxplot_graph(boxplot_lr, "Linear Regression")
-
 
 
     y_pred_rf = random_forest(x_train, y_train, x_test, y_test)
