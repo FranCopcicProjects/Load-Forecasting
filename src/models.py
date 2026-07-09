@@ -6,7 +6,6 @@ from data_manager import *
 import tensorflow.keras as keras
 
 def evaluation(y_test, y_pred):
-
     mse = sklearn.metrics.mean_squared_error(y_test, y_pred)
     rmse = np.sqrt(mse)
     mae = sklearn.metrics.mean_absolute_error(y_test, y_pred)
